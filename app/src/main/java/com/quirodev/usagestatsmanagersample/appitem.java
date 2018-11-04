@@ -38,12 +38,10 @@ public class appitem {
     public static List<AppItem1> getApps(Context context, int sort, int offset) {
 
         // value of sort is 0 and value of offset is 1
-        PackageManager packagemanager=context.getPackageManager();
+        PackageManager packagemanager = context.getPackageManager();
 
         List<AppItem1> items = new ArrayList<>();
         //object of usagestats manager
-        Log.v("testing2", String.valueOf(sort) + " " + String.valueOf(offset));
-
         UsageStatsManager manager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
 
         if (manager != null) {
@@ -84,13 +82,12 @@ public class appitem {
                         item.mPackageName = eventPackage;
                         try {
                             ApplicationInfo ai = packagemanager.getApplicationInfo(item.mPackageName, 0);
-                            Drawable appicon=packagemanager.getApplicationIcon(ai);
-                            String appname=packagemanager.getApplicationLabel(ai).toString();
-                            item.appname=appname;
-                            item.appicon=appicon;
+                            Drawable appicon = packagemanager.getApplicationIcon(ai);
+                            String appname = packagemanager.getApplicationLabel(ai).toString();
+                            item.appname = appname;
+                            item.appicon = appicon;
                             // item.mEventTime=eventTime;
-                        }
-                        catch (PackageManager.NameNotFoundException e){
+                        } catch (PackageManager.NameNotFoundException e) {
                             continue;
                         }
                         items.add(item);
@@ -133,37 +130,14 @@ public class appitem {
         }
         List<AppItem1> newList = new ArrayList<>();
 
-        //it is sorted on the basis of the spinner present on the mainactivity.
-        if (sort == 0) {
-            Collections.sort(newList, new Comparator<AppItem1>() {
-                @Override
-                public int compare(AppItem1 left, AppItem1 right) {
-                    return (int) (right.mUsageTime - left.mUsageTime);
-                }
-            });
-        } else if (sort == 1) {
-            Collections.sort(newList, new Comparator<AppItem1>() {
-                @Override
-                public int compare(AppItem1 left, AppItem1 right) {
-                    return (int) (right.mEventTime - left.mEventTime);
-                }
-            });
-        } else if (sort == 2) {
-            Collections.sort(newList, new Comparator<AppItem1>() {
-                @Override
-                public int compare(AppItem1 left, AppItem1 right) {
-                    return right.mCount - left.mCount;
-                }
-            });
-        } else {
-            Collections.sort(newList, new Comparator<AppItem1>() {
-                @Override
-                public int compare(AppItem1 left, AppItem1 right) {
-                    return (int) (right.mMobile - left.mMobile);
-                }
-            });
-        }
-        Log.v("size2",String.valueOf(items.size()));
+        Collections.sort(newList, new Comparator<AppItem1>() {
+            @Override
+            public int compare(AppItem1 left, AppItem1 right) {
+                return (int) (right.mUsageTime - left.mUsageTime);
+            }
+        });
+
+        //Log.v("size2", String.valueOf(items.size()));
         return items;
     }
 

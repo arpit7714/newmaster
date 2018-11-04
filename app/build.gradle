@@ -6,11 +6,7 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
-    }
-}
-repositories {
-    maven {
-        url "https://jitpack.io"
+
     }
 }
 android {
@@ -18,7 +14,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.quirodev.usagestatsmanagersample"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -57,7 +53,9 @@ dependencies {
     })
     implementation 'com.android.support:appcompat-v7:27.0.0'
     implementation 'com.android.support:recyclerview-v7:27.0.0'
+    //implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
     testImplementation 'junit:junit:4.12'
+    implementation 'com.github.bmarrdev:android-DecoView-charting:v0.9.3'
 
 }
 //apply plugin: 'me.tatarka.retrolambda'

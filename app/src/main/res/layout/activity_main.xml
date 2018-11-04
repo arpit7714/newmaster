@@ -58,25 +58,55 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     </android.support.design.widget.AppBarLayout>-->
-   <!-- <ScrollView
+   <ScrollView
         android:id="@+id/childScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/description"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#42A5F5"
+        >
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </ScrollView>-->
+            android:layout_height="200dp"
+            android:id="@+id/timelayout"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimaryDark"
+            >
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@android:color/white"
+                android:textEditNoPasteWindowLayout="@style/Base.TextAppearance.AppCompat.Display3" />
 
 
-    <android.support.v7.widget.RecyclerView
+            <com.hookedonplay.decoviewlib.DecoView xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/dynamicArcView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true"
+                custom:dv_lineWidth="26dp" />
+
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/fragment1"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            />
+            android:layout_below="@id/timelayout"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </RelativeLayout>
+</ScrollView>
         <TextView
             android:id="@+id/enable_text"
             android:layout_width="0dp"

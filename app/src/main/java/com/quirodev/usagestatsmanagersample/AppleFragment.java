@@ -2,6 +2,7 @@ package com.quirodev.usagestatsmanagersample;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,11 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.XAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.Utils;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.quirodev.data.dbcontract;
 import com.quirodev.data.dbhelper;
 
@@ -35,74 +46,137 @@ public class AppleFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    public String getmonth(int r) {
+        switch (r) {
+            case 0:
+                return "JANUARY";
+            case 1:
+                return "FEBURARY";
+            case 2:
+                return "MARCH";
+            case 3:
+                return "APRIL";
+            case 4:
+                return "MAY";
+            case 5:
+                return "JUNE";
+            case 6:
+                return "JULY";
+            case 7:
+                return "AUGUST";
+            case 8:
+                return "SEPTEMBER";
+            case 9:
+                return "OCTOBER";
+            case 10:
+                return "NOVEMBER";
+            case 11:
+                return "DECEMBER";
+
+        }
+        return "sdc";
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View v = inflater.inflate(R.layout.fragmentapple, container, false);
-        //TextView title1= (TextView) v.findViewById(R.id.title1);
-        //title1.setText("DAILY");
-        TextView title2= (TextView) v.findViewById(R.id.title2);
+        View v = inflater.inflate(R.layout.fragmentapple, container, false);
+        TextView title1 = (TextView) v.findViewById(R.id.title1);
+        title1.setText("DAILY");
+        TextView title2 = (TextView) v.findViewById(R.id.title2);
         title2.setText("WEEKLY");
-        TextView title3= (TextView) v.findViewById(R.id.title3);
+        TextView title3 = (TextView) v.findViewById(R.id.title3);
         title3.setText("MONTHLY");
-        TextView title4= (TextView) v.findViewById(R.id.title4);
-        title4.setText("YEARLY");
+      //  TextView title4 = (TextView) v.findViewById(R.id.title4);
+       // title4.setText("YEARLY");
 
         ArrayList<Entry> entries = new ArrayList<>();
-        Calendar calendar=Calendar.getInstance();
-        Date d1=calendar.getTime();
-        calendar.add(calendar.DATE,1);
+        ArrayList<Entry> entries1 = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        Date d1 = calendar.getTime();
+        calendar.add(calendar.DATE, 1);
+        //get the current month of the year
+        int month = calendar.get(calendar.MONTH);
+
+        //bar chart
+        BarChart barChart = (BarChart) v.findViewById(R.id.barchart);
+        ArrayList<String> label = new ArrayList<String>();
+        label.add("2016");
+        label.add("2015");
+        label.add("2014");
+        label.add("2013");
+        label.add("2012");
+        // set the data and list of labels into chart
 
 
-        Log.v("apppn",appname1);
-        dbhelper mdbhelper= new dbhelper(getActivity());
-        SQLiteDatabase db= mdbhelper.getReadableDatabase();
-        Log.v("testing123","d");
+        //set the custom axis for the  first barchart
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(new MyXAxisValueFormatter());
+        xAxis.setLabelsToSkip(0);
+
+        ArrayList<BarEntry> bargroup1 = new ArrayList<>();
+
+        Log.v("apppn", appname1);
+        dbhelper mdbhelper = new dbhelper(getActivity());
+        SQLiteDatabase db = mdbhelper.getReadableDatabase();
+        Log.v("testing123", "d");
         //Cursor cursor=db.rawQuery("Select * from "+appdata.TABLE_NAME,null);
-        String[] projection={
+        String[] projection = {
                 dbcontract.appdata.APP_NAME,
                 dbcontract.appdata._AL,
                 dbcontract.appdata.APP_DURATION,
                 dbcontract.appdata._ID
         };
         //String selection=dbcontract.appdata.APP_NAME+"=?";
-        String [] args={appname1,};
+        String[] args = {appname1,};
 
         Cursor cursor = db.query(
                 dbcontract.appdata.TABLE_NAME,
-                projection,dbcontract.appdata.APP_NAME+"=?",args
-                ,null,
+                projection, dbcontract.appdata.APP_NAME + "=?", args
+                , null,
                 null,
                 null
         );
-        if (cursor!=null) {
+        if (cursor != null) {
             int appcolumnindex = cursor.getColumnIndex(dbcontract.appdata.APP_NAME);
             int appduration = cursor.getColumnIndex(dbcontract.appdata.APP_DURATION);
-            int date=cursor.getColumnIndex(dbcontract.appdata._AL);
+            int date = cursor.getColumnIndex(dbcontract.appdata._AL);
             //TextView displayview=(TextView)v.findViewById(R.id.database);
             //displayview.setText("Number of rows in database table: " + cursor.getCount());
-            Log.v("cursor",String.valueOf(cursor.getCount()));
-            int i=0;
-            while (cursor.moveToNext()) {
+            Log.v("cursor1212", String.valueOf(cursor.getCount()));
+            int i = 0;
+            while (cursor.moveToNext() && i <= 6) {
                 String appname = cursor.getString(appcolumnindex);
-                String duration =  cursor.getString(appduration);
-                String datecol=cursor.getString(date);
-              //  displayview.append("\n"+appname+"  "+duration+" "+datecol+"\n");
-                entries.add(new Entry(Long.parseLong(duration)/60000 , i));
+                String duration = cursor.getString(appduration);
+                String datecol = cursor.getString(date);
+                //  displayview.append("\n"+appname+"  "+duration+" "+datecol+"\n");
+                //entries.add(new Entry(Long.parseLong(duration) / 60000, i));
+                //entries1.add(new Entry(Long.parseLong(duration) / 60000, i));
+                bargroup1.add(new BarEntry(Long.parseLong(duration) / 60000, i));
                 i++;
-                Log.v("data123",appname+"  "+duration+"  "+datecol);
+                Log.v("data123", appname + "  " + duration + "  " + datecol);
             }
+           /* while (cursor.moveToNext() && i <= 30) {
+                String appname = cursor.getString(appcolumnindex);
+                String duration = cursor.getString(appduration);
+                String datecol = cursor.getString(date);
+                //  displayview.append("\n"+appname+"  "+duration+" "+datecol+"\n");
+                entries1.add(new Entry(Long.parseLong(duration) / 60000, i));
+                i++;
+            }*/
             cursor.close();
         }
-        //entries.add(new Entry(8f, 1));
-        //entries.add(new Entry(6f, 2));
-        //entries.add(new Entry(2f, 3));
-        //entries.add(new Entry(18f, 4));
-        //entries.add(new Entry(9f, 5));
-        //entries.add(new Entry(5f,7));
-        LineDataSet dataset = new LineDataSet(entries,"app usage");
-        ArrayList<String>labels = new ArrayList<String>();
+
+        BarDataSet bardataset = new BarDataSet(bargroup1, "Cells");
+        BarData data1 = new BarData(label, bardataset);
+        barChart.setData(data1);
+
+       // LineDataSet dataset = new LineDataSet(entries, "app usage");
+        //LineDataSet dataSet2 = new LineDataSet(entries1, getmonth(month));
+        ArrayList<String> labels = new ArrayList<String>();
         labels.add("today");
         labels.add("wednesday");
         labels.add("thursday");
@@ -111,8 +185,8 @@ public class AppleFragment extends Fragment {
         labels.add("sunday");
         labels.add("monday");
 
-        ArrayList<String> label1=new ArrayList<String>();
-        label1.add("october");
+        BarData data2= new BarData(labels , bardataset);
+        ArrayList<String> label1 = new ArrayList<String>();
         label1.add("november");
         label1.add("december");
         label1.add("january");
@@ -124,24 +198,46 @@ public class AppleFragment extends Fragment {
         label1.add("july");
         label1.add("august");
         label1.add("september");
-        LineData data2=new LineData(label1,dataset);
-        LineData data = new LineData(labels, dataset);
-        //lineChart1.setData(data);
-        //lineChart1.setDescription("days");
-        dataset.setColors(ColorTemplate.COLORFUL_COLORS);
-        //lineChart1.animateY(5000);
-        LineChart lineChart2 = (LineChart) v.findViewById(R.id.chart2);
-        lineChart2.setData(data);
-        lineChart2.setDescription("weeks");
-        lineChart2.animateY(5000);
-        LineChart lineChart3 = (LineChart) v.findViewById(R.id.chart3);
-        lineChart3.setData(data2);
-        lineChart3.setDescription("monthly");
-        lineChart3.animateY(5000);
-        LineChart lineChart4 = (LineChart) v.findViewById(R.id.chart4);
-        lineChart4.setData(data);
-        lineChart4.setDescription("yearly");
-        lineChart4.animateY(5000);
+        label1.add("october");
+
+        final ArrayList<String> xAxisLabel = new ArrayList<>();
+
+        BarData data3=new BarData(label1,bardataset);
+
+
+        bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
+        BarChart barChart2 = (BarChart) v.findViewById(R.id.chart2);
+        barChart2.setData(data2);
+        barChart2.setDescription("weeks");
+        barChart2.animateY(5000);
+
+
+
+
+        BarChart barchart3 = (BarChart) v.findViewById(R.id.chart3);
+        barchart3.setData(data3);
+        barchart3.setDescription("monthly");
+        barchart3.animateY(5000);
+        //BarChart barchart4 = (BarChart) v.findViewById(R.id.chart4);
+        //barchart4.setData(data1);
+       // barchart4.setDescription("yearly");
+       // barchart4.animateY(5000);
         return v;
+    }
+
+    public class MyXAxisValueFormatter implements XAxisValueFormatter {
+
+        @Override
+        public String getXValue(String dateInMillisecons, int index, ViewPortHandler viewPortHandler) {
+            try {
+                Date c = Calendar.getInstance().getTime();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+
+                return sdf.format(c);
+            } catch (Exception e) {
+                return dateInMillisecons;
+            }
+
+        }
     }
 }

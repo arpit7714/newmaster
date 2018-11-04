@@ -20,8 +20,8 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
         app:cardBackgroundColor="#E3F2FD"
-        app:cardCornerRadius="1dp"
-        app:cardElevation="5dp"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="10dp"
         app:contentPadding="@dimen/text_margin">
 
         <RelativeLayout

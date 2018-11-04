@@ -6,7 +6,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.location.SettingInjectorService;
 import android.os.AsyncTask;
@@ -22,6 +25,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Fade;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +37,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hookedonplay.decoviewlib.DecoView;
+import com.hookedonplay.decoviewlib.charts.SeriesItem;
+import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.quirodev.data.dbprovider;
 
 import java.util.List;
@@ -53,6 +60,7 @@ MainActivity extends AppCompatActivity implements UsageContract.View {
     private ActionBarDrawerToggle t;
     private NavigationView nv;
     public dbprovider mdb;
+    public TextView tv;
     //public TextView tt;
 
     //this is used to show the average time smartphone used for today
@@ -69,7 +77,8 @@ MainActivity extends AppCompatActivity implements UsageContract.View {
 
         dl.addDrawerListener(t);
         t.syncState();
-
+        tv=(TextView) findViewById(R.id.description);
+        tv.setText("21345678");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         nv = (NavigationView)findViewById(R.id.nv);
@@ -113,6 +122,7 @@ MainActivity extends AppCompatActivity implements UsageContract.View {
 
         //as we want to display our data as the linear vertical list , then this is the linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setNestedScrollingEnabled(false);
 
         //divider decoration
         //DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
@@ -265,6 +275,48 @@ MainActivity extends AppCompatActivity implements UsageContract.View {
                 if (item.mUsageTime <= 0) continue;
                 mTotal += item.mUsageTime;
             }
+            //deco view
+
+            DecoView arcView = (DecoView)findViewById(R.id.dynamicArcView);
+
+           // Create background track
+            arcView.addSeries(new SeriesItem.Builder(Color.argb(255, 218, 218, 218))
+                    .setRange(0, 100, 100)
+                    .setInitialVisibility(false)
+                    .setLineWidth(32f)
+                    .build());
+
+            //Create data series track
+            SeriesItem seriesItem1 = new SeriesItem.Builder(Color.argb(255, 64, 196, 0))
+                    .setRange(0, 100, 0)
+                    .setLineWidth(32f)
+                    .build();
+
+            int series1Index = arcView.addSeries(seriesItem1);
+            arcView.addEvent(new DecoEvent.Builder(DecoEvent.EventType.EVENT_SHOW, true)
+                    .setDelay(1000)
+                    .setDuration(2000)
+                    .build());
+
+
+            int res=mTotal/864000;
+            arcView.addEvent(new DecoEvent.Builder(res).setIndex(series1Index).setDelay(4000).build());
+           // arcView.addEvent(new DecoEvent.Builder(100).setIndex(series1Index).setDelay(8000).build());
+            //arcView.addEvent(new DecoEvent.Builder(10).setIndex(series1Index).setDelay(12000).build());
+            //final TextView textPercentage = (TextView) findViewById(R.id.textPercentage);
+            /*seriesItem1.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
+                @Override
+                public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
+                    float percentFilled = ((currentPosition - seriesItem.getMinValue()) / (seriesItem.getMaxValue() - seriesItem.getMinValue()));
+                    tv.setText(String.format("%.0f%%", percentFilled * 100f));
+                }
+
+                @Override
+                public void onSeriesItemDisplayProgress(float percentComplete) {
+
+                }
+            });*/
+
             /* Bundle bundle = new Bundle();
             String total_time_used = " Total time Used : " + String.valueOf(DateUtils.covertingtime(mTotal));
             bundle.putString("total_time_used", total_time_used );
@@ -274,11 +326,12 @@ MainActivity extends AppCompatActivity implements UsageContract.View {
             F1.setArguments(bundle);
             FT.add(R.id.fragment1,F1);
             FT.commit();*/
-           // tt.setText(String.valueOf(DateUtils.covertingtime(mTotal)));
+            tv.setText(String.valueOf(DateUtils.covertingtime(mTotal)));
             adapter.setList(appItems);
             showProgressBar(false);
         }
     }
+
 
 
 }

@@ -6,7 +6,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--<TextView
+        <TextView
             android:id="@+id/title1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
             android:textSize="30sp"
             android:textStyle="bold"
             />
-        <com.github.mikephil.charting.charts.LineChart
+        <!--<com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart1"
             android:layout_width="match_parent"
             android:layout_below="@+id/title1"
@@ -32,17 +32,25 @@
             android:layout_gravity="center"
             android:layout_marginTop="20sp"
             android:background="#000" />-->
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barchart"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/title1"
+            android:layout_height="300dp"
+            android:layout_marginTop="20sp"
+            android:padding="100dp"
+            />
         <TextView
             android:id="@+id/title2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:paddingTop="8dp"
-            android:layout_below="@+id/line1"
+            android:layout_below="@id/barchart"
             android:textSize="30sp"
             android:textStyle="bold"
             />
-        <com.github.mikephil.charting.charts.LineChart
+        <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/chart2"
             android:layout_width="match_parent"
             android:layout_marginTop="20sp"
@@ -68,7 +76,7 @@
             android:textSize="30sp"
             android:textStyle="bold"
             />
-        <com.github.mikephil.charting.charts.LineChart
+        <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/chart3"
             android:layout_width="match_parent"
             android:layout_below="@+id/title3"
@@ -84,7 +92,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20sp"
             android:background="#000" />
-        <TextView
+       <!-- <TextView
             android:id="@+id/title4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,14 +102,14 @@
             android:textSize="30sp"
             android:textStyle="bold"
             />
-        <com.github.mikephil.charting.charts.LineChart
+        <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/chart4"
             android:layout_width="match_parent"
             android:layout_below="@+id/title4"
             android:layout_height="300dp"
             android:layout_marginTop="20sp"
             android:padding="100dp"
-            />
+            />-->
         <ImageView
             android:id="@+id/appicon"
             android:layout_width="200dp"
