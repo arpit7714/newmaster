@@ -47,7 +47,7 @@ public class AppleFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-   
+
     public String getday(int a){
         String[] days = new String[] {"Sunday","Monday","Tuesday", "Wednesday","Thursday","Friday", "Saturday"};
         return days[a];
@@ -124,7 +124,7 @@ public class AppleFragment extends Fragment {
                 //  displayview.append("\n"+appname+"  "+duration+" "+datecol+"\n");
                 //entries.add(new Entry(Long.parseLong(duration) / 60000, i));
                 //entries1.add(new Entry(Long.parseLong(duration) / 60000, i));
-                if (i==0)
+                if (i==cursor.getCount()-1)
                     bargroup2.add(new BarEntry(Long.parseLong(duration) / 60000, i));
                 bargroup1.add(new BarEntry(Long.parseLong(duration) / 60000, i));
                 i++;
